@@ -24,7 +24,8 @@
     "test:watch": "vitest",
     "release": "bumpp",
     "example:image-generation": "tsx examples/image-generation.ts",
-    "example:video-generation": "tsx examples/video-generation.ts"
+    "example:video-generation": "tsx examples/video-generation.ts",
+    "example:web": "pnpm --filter decart-tanstack-ai-web-example dev"
   },
   "exports": {
     "./package.json": "./package.json",
