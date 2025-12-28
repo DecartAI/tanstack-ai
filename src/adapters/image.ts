@@ -1,7 +1,10 @@
 import type { ImageModels } from "@decartai/sdk";
 import type { GeneratedImage, ImageGenerationOptions, ImageGenerationResult } from "@tanstack/ai";
 import { BaseImageAdapter } from "@tanstack/ai/adapters";
-import type { DecartImageProviderOptions } from "../image/image-provider-options";
+import type {
+  DecartImageModelProviderOptionsByName,
+  DecartImageProviderOptions,
+} from "../image/image-provider-options";
 import { validatePrompt } from "../image/image-provider-options";
 import type { DecartImageModel } from "../model-meta";
 import { blobToBase64, createClient, generateId, getDecartApiKeyFromEnv, mapSizeToResolution, models } from "../utils";
@@ -11,13 +14,26 @@ export interface DecartImageConfig {
   baseUrl?: string;
 }
 
-export class DecartImageAdapter extends BaseImageAdapter<DecartImageModel, DecartImageProviderOptions> {
+/**
+ * Decart Image Generation Adapter
+ *
+ * Tree-shakeable adapter for Decart image generation functionality.
+ * Supports lucy-pro-t2i model.
+ *
+ * Features:
+ * - Model-specific type-safe provider options
+ * - Resolution and orientation configuration
+ * - Seed support for reproducible generation
+ */
+export class DecartImageAdapter<
+  TModel extends DecartImageModel,
+> extends BaseImageAdapter<TModel, DecartImageProviderOptions, DecartImageModelProviderOptionsByName> {
   readonly kind = "image" as const;
   readonly name = "decart" as const;
 
   private client: ReturnType<typeof createClient>;
 
-  constructor(config: DecartImageConfig, model: DecartImageModel) {
+  constructor(config: DecartImageConfig, model: TModel) {
     super(config, model);
     this.client = createClient(config);
   }
@@ -50,15 +66,18 @@ export class DecartImageAdapter extends BaseImageAdapter<DecartImageModel, Decar
   }
 }
 
-export function createDecartImage(
-  model: DecartImageModel,
+export function createDecartImage<TModel extends DecartImageModel>(
+  model: TModel,
   apiKey: string,
   config?: Omit<DecartImageConfig, "apiKey">,
-): DecartImageAdapter {
+): DecartImageAdapter<TModel> {
   return new DecartImageAdapter({ apiKey, ...config }, model);
 }
 
-export function decartImage(model: DecartImageModel, config?: Omit<DecartImageConfig, "apiKey">): DecartImageAdapter {
+export function decartImage<TModel extends DecartImageModel>(
+  model: TModel,
+  config?: Omit<DecartImageConfig, "apiKey">,
+): DecartImageAdapter<TModel> {
   const apiKey = getDecartApiKeyFromEnv();
   return createDecartImage(model, apiKey, config);
 }

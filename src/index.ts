@@ -10,12 +10,25 @@ export {
   type DecartVideoConfig,
   decartVideo,
 } from "./adapters/video";
-export type { DecartImageProviderOptions } from "./image/image-provider-options";
+export type {
+  DecartImageModelProviderOptionsByName,
+  DecartImageOrientation,
+  DecartImageProviderOptions,
+  DecartImageResolution,
+} from "./image/image-provider-options";
 export {
   DECART_IMAGE_MODELS,
   DECART_VIDEO_MODELS,
   type DecartImageModel,
+  type DecartModelInputModalitiesByName,
   type DecartVideoModel,
+  LUCY_PRO_T2I,
+  LUCY_PRO_T2V,
 } from "./model-meta";
 export { VERSION } from "./version";
-export type { DecartVideoProviderOptions } from "./video/video-provider-options";
+export type {
+  DecartVideoModelProviderOptionsByName,
+  DecartVideoOrientation,
+  DecartVideoProviderOptions,
+  DecartVideoResolution,
+} from "./video/video-provider-options";

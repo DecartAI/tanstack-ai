@@ -11,13 +11,15 @@ export interface DecartVideoConfig {
   baseUrl?: string;
 }
 
-export class DecartVideoAdapter extends BaseVideoAdapter<DecartVideoModel, DecartVideoProviderOptions> {
+export class DecartVideoAdapter<
+  TModel extends DecartVideoModel,
+> extends BaseVideoAdapter<TModel, DecartVideoProviderOptions> {
   readonly kind = "video" as const;
   readonly name = "decart" as const;
 
   private client: ReturnType<typeof createClient>;
 
-  constructor(config: DecartVideoConfig, model: DecartVideoModel) {
+  constructor(config: DecartVideoConfig, model: TModel) {
     super(config, model);
     this.client = createClient(config);
   }
@@ -66,15 +68,18 @@ export class DecartVideoAdapter extends BaseVideoAdapter<DecartVideoModel, Decar
   }
 }
 
-export function createDecartVideo(
-  model: DecartVideoModel,
+export function createDecartVideo<TModel extends DecartVideoModel>(
+  model: TModel,
   apiKey: string,
   config?: Omit<DecartVideoConfig, "apiKey">,
-): DecartVideoAdapter {
+): DecartVideoAdapter<TModel> {
   return new DecartVideoAdapter({ apiKey, ...config }, model);
 }
 
-export function decartVideo(model: DecartVideoModel, config?: Omit<DecartVideoConfig, "apiKey">): DecartVideoAdapter {
+export function decartVideo<TModel extends DecartVideoModel>(
+  model: TModel,
+  config?: Omit<DecartVideoConfig, "apiKey">,
+): DecartVideoAdapter<TModel> {
   const apiKey = getDecartApiKeyFromEnv();
   return createDecartVideo(model, apiKey, config);
 }
