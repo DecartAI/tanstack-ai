@@ -1,6 +1,6 @@
 {
   "name": "@decartai/tanstack-ai-adapter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Decart adapter for TanStack AI - image and video generation",
   "license": "MIT",
